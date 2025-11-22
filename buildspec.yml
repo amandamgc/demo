@@ -4,6 +4,7 @@ phases:
   install:
     runtime-versions:
       java: corretto17
+      maven: 3.9
     commands:
       - echo "Instalando dependencias de Maven si no están en caché..."
 
@@ -11,23 +12,16 @@ phases:
     commands:
       - echo "Iniciando pre-build..."
       - mvn clean
+      - mvn validate
 
   build:
     commands:
-      - echo "Ejecutando tests..."
-      - mvn test
-      - echo "Construyendo JAR..."
-      - mvn package -DskipTests=false
-      
-      # Crear carpeta de distribución
-      - mkdir -p build-output
-      # Copiar el JAR
-      - cp target/*.jar build-output/
+      - echo "Ejecutando tests y construyendo JAR..."
+      - mvn package
 
-      # Crear ZIP que Beanstalk necesita
-      - cd build-output
-      - zip ../artifact.zip *.jar
-      - cd ..
+      # Crear ZIP listo para Elastic Beanstalk
+      - echo "Empaquetando JAR en artifact.zip..."
+      - zip -j artifact.zip target/*.jar
 
   post_build:
     commands:
