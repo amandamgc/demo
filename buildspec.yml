@@ -3,27 +3,29 @@ version: 0.2
 phases:
   install:
     runtime-versions:
+      # Especifica la versión de Java que usa tu proyecto
       java: corretto17
-    commands:
-      - mvn --version
 
   pre_build:
     commands:
-      - mvn clean
+      - echo "Iniciando pre-build... (Instalando dependencias si es necesario)"
 
   build:
     commands:
+      - echo "Ejecutando tests..."
+      # 1. Ejecuta los tests como solicitaste
       - mvn test
-      - mvn package -DskipTests=false
-      - cp target/*.jar app.jar
-      - echo "web: java -jar app.jar" > Procfile
-      - zip artifact.zip app.jar Procfile
+      - echo "Construyendo el artefacto (JAR)..."
+      # 2. Construye la aplicación
+      - mvn package
 
   post_build:
     commands:
-      - true
+      - echo "Build completado."
 
+# Artefactos: Esto le dice a CodeBuild qué archivo debe pasar a la etapa de despliegue
 artifacts:
   files:
-    - artifact.zip
+    # Asegúrate que esta ruta coincida con tu JAR de Spring Boot
+    - 'target/*.jar'
   discard-paths: yes
