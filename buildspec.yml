@@ -5,11 +5,12 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Instalando dependencias de Maven si no están en caché..."
+      - echo "Instalando dependencias Maven..."
+      - mvn --version
 
   pre_build:
     commands:
-      - echo "Iniciando pre-build..."
+      - echo "Limpiando proyecto..."
       - mvn clean
 
   build:
@@ -18,19 +19,15 @@ phases:
       - mvn test
       - echo "Construyendo JAR..."
       - mvn package -DskipTests=false
-
-      - echo "Creando carpeta de distribución..."
       - mkdir -p build-output
-      - cp target/*.jar build-output/
-
-      - echo "Creando artifact.zip para Elastic Beanstalk..."
+      - cp target/*.jar build-output/app.jar
       - cd build-output
-      - zip -r ../artifact.zip *
+      - zip -r ../artifact.zip app.jar
       - cd ..
 
   post_build:
     commands:
-      - echo "Build completado exitosamente. artifact.zip listo para Beanstalk."
+      - echo "Build completado exitosamente."
 
 artifacts:
   files:
