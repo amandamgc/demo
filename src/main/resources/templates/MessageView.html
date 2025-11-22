@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hola</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h3> Equipo 1055C </h3>
+<ul>
+    <li>Amanda Magaly Gutierrez Carranza</li>
+    <li>Gerardo Takeshi Nakamura Ramirez</li>
+    <li>Ricardo Alberto Prada Cataño</li>
+    <li>Ubaldo Duarte Leon</li>
+    <li>Anibal Santiago Morales</li>
+</ul>
+<br><br>
+<p th:each="i : ${#numbers.sequence(1, number)}" th:text="${i}+ '.- Hola ' + ${mensaje}"/>
+</body>
+</html>
