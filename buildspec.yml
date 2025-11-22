@@ -19,21 +19,18 @@ phases:
       - mvn test
       - echo "Construyendo JAR..."
       - mvn package -DskipTests=false
-
-      # Crear carpeta temporal deploy
-      - mkdir -p deploy
-      # Copiar JAR y renombrar
-      - cp target/*.jar deploy/app.jar
-      # Crear Procfile opcional
-      - echo "web: java -jar app.jar" > deploy/Procfile
-      # Crear ZIP listo para Beanstalk
-      - cd deploy
+      - echo "Preparando ZIP para Elastic Beanstalk..."
+      - mkdir -p build-output
+      - cp target/*.jar build-output/app.jar
+      - echo "Creando Procfile..."
+      - echo "web: java -jar app.jar" > build-output/Procfile
+      - cd build-output
       - zip -r ../artifact.zip *
       - cd ..
 
   post_build:
     commands:
-      - echo "Build completado exitosamente. Artifact listo para Elastic Beanstalk."
+      - echo "Build completado exitosamente."
 
 artifacts:
   files:
