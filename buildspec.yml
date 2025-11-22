@@ -3,29 +3,37 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      # Especifica la versión de Java que usa tu proyecto
       java: corretto17
+    commands:
+      - echo "Instalando dependencias de Maven si no están en caché..."
 
   pre_build:
     commands:
-      - echo "Iniciando pre-build... (Instalando dependencias si es necesario)"
+      - echo "Iniciando pre-build..."
+      - mvn clean
 
   build:
     commands:
       - echo "Ejecutando tests..."
-      # 1. Ejecuta los tests como solicitaste
       - mvn test
-      - echo "Construyendo el artefacto (JAR)..."
-      # 2. Construye la aplicación
-      - mvn package
+      - echo "Construyendo JAR..."
+      - mvn package -DskipTests=false
+      
+      # Crear carpeta de distribución
+      - mkdir -p build-output
+      # Copiar el JAR
+      - cp target/*.jar build-output/
+
+      # Crear ZIP que Beanstalk necesita
+      - cd build-output
+      - zip ../artifact.zip *.jar
+      - cd ..
 
   post_build:
     commands:
-      - echo "Build completado."
+      - echo "Build completado exitosamente."
 
-# Artefactos: Esto le dice a CodeBuild qué archivo debe pasar a la etapa de despliegue
 artifacts:
   files:
-    # Asegúrate que esta ruta coincida con tu JAR de Spring Boot
-    - 'target/*.jar'
+    - artifact.zip
   discard-paths: yes
