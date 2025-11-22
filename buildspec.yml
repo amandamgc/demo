@@ -5,22 +5,30 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Instalando dependencias de Maven si no están en caché..."
+      - echo "Instalando dependencias de Maven..."
+      # Maven ya viene instalado en la imagen de CodeBuild Java
+      - mvn --version
 
   pre_build:
     commands:
-      - echo "Iniciando pre-build..."
+      - echo "Limpiando build anterior..."
       - mvn clean
-      - mvn validate
 
   build:
     commands:
-      - echo "Ejecutando tests y construyendo JAR..."
-      - mvn package
+      - echo "Compilando proyecto y ejecutando tests..."
+      - mvn package -DskipTests=false
 
-      # Crear ZIP listo para Elastic Beanstalk
-      - echo "Empaquetando JAR en artifact.zip..."
-      - zip -j artifact.zip target/*.jar
+      - echo "Preparando ZIP para Elastic Beanstalk..."
+      # Crear carpeta temporal para artifact
+      - mkdir -p eb-artifact
+      # Copiar el JAR a la carpeta temporal
+      - cp target/*.jar eb-artifact/
+      # Crear ZIP directamente con el JAR en la raíz
+      - cd eb-artifact
+      - zip -r ../artifact.zip *
+      - cd ..
+      - echo "ZIP creado correctamente: artifact.zip"
 
   post_build:
     commands:
