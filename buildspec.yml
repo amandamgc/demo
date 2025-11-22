@@ -19,7 +19,6 @@ phases:
       - mvn test
       - echo "Construyendo JAR..."
       - mvn package -DskipTests=false
-      - echo "Preparando artifact para Elastic Beanstalk..."
       - cp target/*.jar app.jar
       - echo "web: java -jar app.jar" > Procfile
       - zip artifact.zip app.jar Procfile
