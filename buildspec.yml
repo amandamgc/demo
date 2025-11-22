@@ -20,13 +20,9 @@ phases:
       - echo "Construyendo JAR..."
       - mvn package -DskipTests=false
       - echo "Preparando artifact para Elastic Beanstalk..."
-      - echo "web: java -jar app.jar" > Procfile
       - cp target/*.jar app.jar
+      - echo "web: java -jar app.jar" > Procfile
       - zip artifact.zip app.jar Procfile
-
-  post_build:
-    commands:
-      - echo "Build completado correctamente."
 
 artifacts:
   files:
