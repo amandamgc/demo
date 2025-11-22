@@ -4,7 +4,6 @@ phases:
   install:
     runtime-versions:
       java: corretto17
-      maven: 3.9
     commands:
       - echo "Instalando dependencias de Maven si no están en caché..."
 
