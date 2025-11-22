@@ -5,23 +5,23 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Instalando Maven..."
       - mvn --version
 
   pre_build:
     commands:
-      - echo "Limpiando proyecto..."
       - mvn clean
 
   build:
     commands:
-      - echo "Ejecutando tests..."
       - mvn test
-      - echo "Construyendo JAR..."
       - mvn package -DskipTests=false
       - cp target/*.jar app.jar
       - echo "web: java -jar app.jar" > Procfile
       - zip artifact.zip app.jar Procfile
+
+  post_build:
+    commands:
+      - true
 
 artifacts:
   files:
