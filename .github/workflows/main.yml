@@ -21,4 +21,7 @@ jobs:
         run: puppet parser validate manifests/site.pp
 
       - name: Aplicar manifest (modo simulación)
-        run: sudo puppet apply manifests/site.pp --noop
+        run: sudo puppet apply manifests/site.pp
+      
+      - name: Verificar que nginx esté instalado
+        run: dpkg -l | grep nginx
