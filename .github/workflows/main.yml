@@ -1,0 +1,12 @@
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Puppet
+        run: sudo apt install -y puppet
+
+      - name: Aplicar manifest
+        run: sudo puppet apply manifests/site.pp
