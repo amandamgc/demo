@@ -1,12 +1,24 @@
+name: Puppet Manual Run
+
+on:
+  workflow_dispatch:
+
 jobs:
-  deploy:
+  puppet-test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout del repo
+        uses: actions/checkout@v4
+
+      - name: Actualizar paquetes
+        run: sudo apt-get update
 
       - name: Instalar Puppet
-        run: sudo apt install -y puppet
+        run: sudo apt-get install -y puppet
 
-      - name: Aplicar manifest
-        run: sudo puppet apply manifests/site.pp
+      - name: Validar sintaxis del manifest
+        run: puppet parser validate manifests/site.pp
+
+      - name: Aplicar manifest (modo simulación)
+        run: sudo puppet apply manifests/site.pp --noop
